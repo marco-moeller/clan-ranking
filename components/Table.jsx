@@ -113,6 +113,7 @@ const Table = () => {
 
       onValue(playersInDatabase, async (snapshot) => {
         const data = Object.entries(snapshot.val()).map((player) => player[1]);
+        setPlayers([]);
         data.map((player) => initializePlayersWithApiData(player));
       });
     }
