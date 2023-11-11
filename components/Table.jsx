@@ -29,19 +29,17 @@ const Table = () => {
   });
   const [loadingSeason, setLoadingSeason] = useState(true);
   const [loadingPlayers, setLoadingPlayers] = useState(true);
-
-  const currentWeekOfTheSeason = getWeek(new Date(), season.startDate);
-
   const [selectedWeek, setSelectedWeek] = useState(
     getWeek(new Date(), season.startDate)
   );
+  const [players, setPlayers] = useState([]);
+  const [showWholeSeason, setShowWholeSeason] = useState(true);
 
+  const currentWeekOfTheSeason = getWeek(new Date(), season.startDate);
   //all weeks of the season, for button creation
   const [weeks, setWeeks] = useState(
     Array.apply(null, Array(currentWeekOfTheSeason))
   );
-  const [players, setPlayers] = useState([]);
-  const [showWholeSeason, setShowWholeSeason] = useState(true);
 
   const handleWeekClick = (index) => {
     setSelectedWeek(index);
@@ -81,6 +79,7 @@ const Table = () => {
         await fetchPlayerData(player, season.season),
         player
       );
+
       const newPlayerWithMatches = await initializePlayerMatches(newPlayer);
       const newPlayerWithMatchesAndMmrHistory =
         await initializePlayerMmrHistory(newPlayerWithMatches);

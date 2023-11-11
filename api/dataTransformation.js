@@ -10,16 +10,6 @@ export const transformPlayerDataToOurLiking = (playerData, player) => {
     return race === calculateRaceID(player.mainRace);
   };
 
-  if (playerData.length === 0 || playerData === undefined) {
-    return {
-      name: player.name,
-      mmr: 0,
-      race: calculateRaceID(player.mainRace),
-      id: player.id,
-      matches: [],
-      mmrHistory: [],
-    };
-  }
   return (
     playerData
       //playerdata gives back an array of player-object
@@ -36,11 +26,21 @@ export const transformPlayerDataToOurLiking = (playerData, player) => {
         id: player.id,
         matches: [],
         mmrHistory: [],
-      }))[0]
+      }))[0] || {
+      name: player.name,
+      mmr: 0,
+      race: calculateRaceID(player.mainRace),
+      id: player.id,
+      matches: [],
+      mmrHistory: [],
+    }
   );
 };
 
 export const transformMatchesDataToOurLiking = (data, startDate) => {
+  //no filter for main race
+  //take all matches intentionally
+  //subject to future change
   return data.matches
     .filter((match) => isNotJoinbug(match))
     .map((match) => ({
