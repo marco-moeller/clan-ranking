@@ -24,7 +24,7 @@ import { db } from "@/database/config";
 const Table = () => {
   const [season, setSeason] = useState({
     season: 0,
-    startDate: new Date("2023-08-01"),
+    startDate: new Date("2023-11-22"),
     endDate: "",
   });
   const [loadingSeason, setLoadingSeason] = useState(true);
