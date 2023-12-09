@@ -1,6 +1,5 @@
-export const getNumberOfMatchesAWeek = (matches, week) => {
-  return matches.filter((match) => match.week === week).length;
-};
+export const getNumberOfMatchesAWeek = (matches, week) =>
+  matches.filter((match) => match.week === week).length;
 
 export const getNumberOfMatchesADay = (matches, week, day) => {
   if (day === 7) {

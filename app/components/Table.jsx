@@ -1,31 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getWeek } from "../utility/matchesHelper";
+import { getWeek } from "../../utility/matchesHelper";
 import PlayerCard from "./PlayerCard";
 import TableHead from "./TableHead";
 import {
   fetchCurrentSeasonNumber,
   fetchPlayerData,
   fetchPlayerMatches,
-  fetchPlayerMmrHistory,
+  fetchPlayerMmrHistory
 } from "@/api/apiCalls";
 import {
   transformMatchesDataToOurLiking,
   transformMmrDataToOurLiking,
-  transformPlayerDataToOurLiking,
+  transformPlayerDataToOurLiking
 } from "@/api/dataTransformation";
 import { nanoid } from "nanoid";
 import Navbar from "./Navbar";
 import Loading from "./Loading";
 import { ref, onValue } from "firebase/database";
-import { db } from "@/database/config";
+import db from "@/database/config";
+import {
+  isInDesktopView,
+  isInMobileView,
+  isInTabletView
+} from "@/utility/views";
 
 const Table = () => {
   const [season, setSeason] = useState({
     season: 0,
     startDate: new Date("2023-11-22"),
-    endDate: "",
+    endDate: ""
   });
   const [loadingSeason, setLoadingSeason] = useState(true);
   const [loadingPlayers, setLoadingPlayers] = useState(true);
@@ -85,7 +90,7 @@ const Table = () => {
         await initializePlayerMmrHistory(newPlayerWithMatches);
       setPlayers((prevPlayers) => [
         ...prevPlayers,
-        newPlayerWithMatchesAndMmrHistory,
+        newPlayerWithMatchesAndMmrHistory
       ]);
       setLoadingPlayers(false);
       sortBy("matches.length");
@@ -127,7 +132,7 @@ const Table = () => {
       const seasonNumber = await fetchCurrentSeasonNumber();
       setSeason((prevSeason) => ({
         ...prevSeason,
-        season: seasonNumber,
+        season: seasonNumber
       }));
       setLoadingSeason(false);
     };
@@ -136,23 +141,28 @@ const Table = () => {
 
   //dynamic layout depending on number of weeks, change on resize
   useEffect(() => {
-    window.addEventListener("resize", () => {
-      if (window.innerWidth < 1320 && window.innerWidth >= 1020) {
-        document.body.style.setProperty(
-          "--columnsSeason",
-          4 + currentWeekOfTheSeason
-        );
+    const resize = () => {
+      {
+        if (isInTabletView()) {
+          document.body.style.setProperty(
+            "--columnsSeason",
+            4 + currentWeekOfTheSeason
+          );
+        }
+        if (isInDesktopView()) {
+          document.body.style.setProperty(
+            "--columnsSeason",
+            5 + currentWeekOfTheSeason
+          );
+        }
+        if (isInMobileView()) {
+          document.body.style.setProperty("--columnsSeason", 4);
+        }
       }
-      if (window.innerWidth >= 1320) {
-        document.body.style.setProperty(
-          "--columnsSeason",
-          5 + currentWeekOfTheSeason
-        );
-      }
-      if (window.innerWidth < 1020) {
-        document.body.style.setProperty("--columnsSeason", 4);
-      }
-    });
+    };
+
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
   }, []);
 
   //dynamic layout depending on number of weeks, for init

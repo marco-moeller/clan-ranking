@@ -155,6 +155,38 @@ main {
   grid-template-columns: repeat(15, auto);
 }
 
+.mobile-week,
+.mobile-season {
+  grid-column: 1/-1;
+  padding: 0.5em;
+  border: 1px solid var(--color3);
+}
+
+.mobile-season {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.mobile-season-el,
+.mobile-week-el {
+  display: inline-block;
+}
+
+.mobile-week > *,
+.mobile-season > * {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.mobile-season > * {
+  flex-direction: column;
+}
+
 .season--table {
   grid-template-columns: repeat(var(--columnsSeason), min-content);
   width: min-content;
@@ -179,6 +211,10 @@ h3.name {
 
 h2 {
   cursor: pointer;
+}
+
+.table--element {
+  text-align: center;
 }
 
 .table--element,
@@ -207,6 +243,10 @@ footer {
 }
 
 /* -- UTILITY -- */
+.hidden {
+  display: none;
+}
+
 .race {
   border-right: 1px solid var(--color3);
 }

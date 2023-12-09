@@ -1,33 +1,33 @@
 import {
   getNumberOfMatchesADay,
-  getNumberOfMatchesAWeek,
+  getNumberOfMatchesAWeek
 } from "@/utility/matchesCounting";
 import { getDayIndexFromDayString } from "@/utility/matchesHelper";
 import {
   getMmrDifference,
   getPrevWeekMmr,
-  getWeekEndMmr,
+  getWeekEndMmr
 } from "@/utility/mmrCalculation";
 import { nanoid } from "nanoid";
 import { useEffect } from "react";
 import _ from "lodash";
+
+const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
 const TableHead = ({
   showWholeSeason,
   setPlayers,
   weeks,
   selectedWeek,
-  sortBy,
+  sortBy
 }) => {
-  const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
   const sortByMatchesAWeek = () => {
     setPlayers((prevPlayers) => [
       ...prevPlayers.sort(
         (a, b) =>
           getNumberOfMatchesAWeek(b.matches, selectedWeek) -
           getNumberOfMatchesAWeek(a.matches, selectedWeek)
-      ),
+      )
     ]);
   };
 
@@ -37,7 +37,7 @@ const TableHead = ({
         (a, b) =>
           getNumberOfMatchesADay(b.matches, selectedWeek, day) -
           getNumberOfMatchesADay(a.matches, selectedWeek, day)
-      ),
+      )
     ]);
   };
 
@@ -53,7 +53,7 @@ const TableHead = ({
             getPrevWeekMmr(selectedWeek, a),
             getWeekEndMmr(selectedWeek, a)
           )
-      ),
+      )
     ]);
   };
 
@@ -62,7 +62,7 @@ const TableHead = ({
       ...prevPlayers.sort(
         (a, b) =>
           getPrevWeekMmr(selectedWeek, b) - getPrevWeekMmr(selectedWeek, a)
-      ),
+      )
     ]);
   };
 
@@ -71,13 +71,13 @@ const TableHead = ({
       ...prevPlayers.sort(
         (a, b) =>
           getWeekEndMmr(selectedWeek, b) - getWeekEndMmr(selectedWeek, a)
-      ),
+      )
     ]);
   };
 
   const sortByName = () => {
     setPlayers((prevPlayers) => [
-      ...prevPlayers.sort((a, b) => a.name.localeCompare(b.name)),
+      ...prevPlayers.sort((a, b) => a.name.localeCompare(b.name))
     ]);
   };
 
@@ -97,7 +97,9 @@ const TableHead = ({
       >
         MMR
       </h2>
-      <h2 className="th table--element race">Race</h2>
+      <h2 className="th table--element race" onClick={() => sortBy("race")}>
+        Race
+      </h2>
       {!showWholeSeason && (
         <h2 className="th table--element start--mmr" onClick={sortByStartMmr}>
           Start MMR

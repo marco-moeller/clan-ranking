@@ -1,9 +1,9 @@
 import axios from "axios";
 
-//gamemode: 1 - 1vs1, 5 - FFA, 6 - 2v2AT, 8 - 4v4AT
+// gamemode: 1 - 1vs1, 5 - FFA, 6 - 2v2AT, 8 - 4v4AT
 const GAME_MODE = 1; // 1vs1
 const PAGE_SIZE = 0; // all matches
-//gateway: 20 - europe
+// gateway: 20 - europe
 const GATEWAY = 20; // Europe
 
 const client = axios.create({
@@ -17,7 +17,8 @@ export const fetchPlayerData = async (player, season) => {
     );
     return data;
   } catch (error) {
-    console.log(error.response);
+    console.error(error.response);
+    return {};
   }
 };
 
@@ -29,6 +30,7 @@ export const fetchPlayerMatches = async (player, season) => {
     return data;
   } catch (error) {
     console.log(error);
+    return {};
   }
 };
 
@@ -40,6 +42,7 @@ export const fetchPlayerMmrHistory = async (player, season) => {
     return data;
   } catch (error) {
     console.log(error);
+    return {};
   }
 };
 
@@ -54,5 +57,6 @@ export const fetchCurrentSeasonNumber = async () => {
     return 0;
   } catch (error) {
     console.log(error);
+    return {};
   }
 };
