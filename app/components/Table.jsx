@@ -29,7 +29,7 @@ import {
 const Table = () => {
   const [season, setSeason] = useState({
     season: 0,
-    startDate: new Date("2023-11-22"),
+    startDate: new Date("2024-06-24"),
     endDate: ""
   });
   const [loadingSeason, setLoadingSeason] = useState(true);
