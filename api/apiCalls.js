@@ -7,7 +7,7 @@ const PAGE_SIZE = 0; // all matches
 const GATEWAY = 20; // Europe
 
 const client = axios.create({
-  baseURL: "https://website-backend.w3champions.com/api",
+  baseURL: "https://website-backend.w3champions.com/api"
 });
 
 export const fetchPlayerData = async (player, season) => {
