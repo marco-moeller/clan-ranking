@@ -15,9 +15,7 @@ export default function useCurrentSeason(showWholeSeason, setShowWholeSeason) {
     endDate: ""
   });
 
-  const [currentWeekOfTheSeason, setCurrentWeekOfTheSeason] = useState(
-    getWeek(new Date(), season.startDate)
-  );
+  const [currentWeekOfTheSeason, setCurrentWeekOfTheSeason] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(
     getWeek(new Date(), season.startDate)
   );
@@ -33,34 +31,34 @@ export default function useCurrentSeason(showWholeSeason, setShowWholeSeason) {
 
   useEffect(() => {
     const seasonInit = async () => {
+      setLoadingSeason(true);
       const seasonNumber = await fetchCurrentSeasonNumber();
-      const startDate = await getSeasonStartDate();
+      const startDate = await getSeasonStartDate(seasonNumber);
       setSeason({
         startDate: startDate,
         season: seasonNumber,
         endDate: ""
       });
       setCurrentWeekOfTheSeason(getWeek(new Date(), startDate));
+      setLoadingSeason(false);
     };
 
-    const getNumberOfSeasonMatches = async () => {
-      return await fetchNumberOfMatchesInCurrentSeason(season.season);
+    const getNumberOfSeasonMatches = async (seasonNumber) => {
+      return await fetchNumberOfMatchesInCurrentSeason(seasonNumber);
     };
 
-    const getSeasonStartDate = async () => {
+    const getSeasonStartDate = async (seasonNumber) => {
       const numberOfMatchesInTheCurrentSeason =
-        await getNumberOfSeasonMatches();
+        await getNumberOfSeasonMatches(seasonNumber);
       const data = await fetchFirstMatchOfTheSeason(
-        season.season,
+        seasonNumber,
         numberOfMatchesInTheCurrentSeason - 1
       );
       const startDate = new Date(data.matches[0].startTime);
       return startDate;
     };
 
-    setLoadingSeason(true);
     seasonInit();
-    setLoadingSeason(false);
   }, []);
 
   return { season, loadingSeason, currentWeekOfTheSeason, weeks, selectedWeek };

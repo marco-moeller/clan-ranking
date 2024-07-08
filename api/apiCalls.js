@@ -54,7 +54,6 @@ export const fetchCurrentSeasonNumber = async () => {
     if (data) {
       return data[0].id;
     }
-    return 0;
   } catch (error) {
     console.log(error);
     return {};
