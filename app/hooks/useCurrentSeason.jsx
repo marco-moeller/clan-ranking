@@ -32,44 +32,36 @@ export default function useCurrentSeason(showWholeSeason, setShowWholeSeason) {
   });
 
   useEffect(() => {
-    setLoadingSeason(true);
     const seasonInit = async () => {
       const seasonNumber = await fetchCurrentSeasonNumber();
-      setSeason((prevSeason) => ({
-        ...prevSeason,
-        season: seasonNumber
-      }));
+      const startDate = await getSeasonStartDate();
+      setSeason({
+        startDate: startDate,
+        season: seasonNumber,
+        endDate: ""
+      });
+      setCurrentWeekOfTheSeason(getWeek(new Date(), startDate));
     };
-    seasonInit();
-  }, []);
 
-  useEffect(() => {
     const getNumberOfSeasonMatches = async () => {
       return await fetchNumberOfMatchesInCurrentSeason(season.season);
     };
 
     const getSeasonStartDate = async () => {
-      const numberOfMatchInTheCurrentSeason = await getNumberOfSeasonMatches();
+      const numberOfMatchesInTheCurrentSeason =
+        await getNumberOfSeasonMatches();
       const data = await fetchFirstMatchOfTheSeason(
         season.season,
-        numberOfMatchInTheCurrentSeason - 1
+        numberOfMatchesInTheCurrentSeason - 1
       );
-
-      setSeason((prevSeason) => ({
-        ...prevSeason,
-        startDate: new Date(data.matches[0].startTime)
-      }));
-      setLoadingSeason(false);
+      const startDate = new Date(data.matches[0].startTime);
+      return startDate;
     };
 
-    if (season.season === 0) return;
-
-    getSeasonStartDate();
-  }, [season.season]);
-
-  useEffect(() => {
-    setCurrentWeekOfTheSeason(getWeek(new Date(), season.startDate));
-  }, [season]);
+    setLoadingSeason(true);
+    seasonInit();
+    setLoadingSeason(false);
+  }, []);
 
   return { season, loadingSeason, currentWeekOfTheSeason, weeks, selectedWeek };
 }

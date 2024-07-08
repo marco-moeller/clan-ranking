@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getWeek } from "../../utility/matchesHelper";
 import PlayerCard from "./PlayerCard";
 import TableHead from "./TableHead";
 import {
@@ -24,6 +23,7 @@ import {
   isInTabletView
 } from "@/utility/views";
 import useCurrentSeason from "../hooks/useCurrentSeason";
+import { nanoid } from "nanoid";
 
 const Table = () => {
   const [showWholeSeason, setShowWholeSeason] = useState(true);
@@ -73,6 +73,7 @@ const Table = () => {
       );
       return { ...player, mmrHistory: mmrHistory };
     };
+
     if (!loadingSeason) {
       setLoadingPlayers(true);
       const playersInDatabase = ref(db, "players/");
@@ -158,7 +159,7 @@ const Table = () => {
               isLast={index === players.length - 1}
               player={player}
               id={index + 1}
-              key={player.name + "#" + player.id}
+              key={player.name + "#" + player.id + nanoid()}
               week={currentWeekOfTheSeason}
               selectedWeek={selectedWeek}
               showWholeSeason={showWholeSeason}
