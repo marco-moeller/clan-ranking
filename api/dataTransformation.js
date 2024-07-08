@@ -7,10 +7,10 @@ const GAME_MODE = 1; // 1vs1
 const isNotJoinbug = (match) =>
   match.durationInSeconds > JOIN_BUG_SECONDS_LIMIT;
 
+const isMainRace = (player, race) => race === calculateRaceID(player.mainRace);
+
 export const transformPlayerDataToOurLiking = (playerData, player) => {
   const isGameMode1vs1 = (gameMode) => gameMode === GAME_MODE;
-
-  const isMainRace = (race) => race === calculateRaceID(player.mainRace);
 
   return (
     playerData
@@ -20,7 +20,8 @@ export const transformPlayerDataToOurLiking = (playerData, player) => {
 
       .filter(
         (dataPoint) =>
-          isGameMode1vs1(dataPoint.gameMode) && isMainRace(dataPoint.race)
+          isGameMode1vs1(dataPoint.gameMode) &&
+          isMainRace(player, dataPoint.race)
       )
       .map((dataPoint) => ({
         name: player.name,
@@ -40,16 +41,26 @@ export const transformPlayerDataToOurLiking = (playerData, player) => {
   );
 };
 
-export const transformMatchesDataToOurLiking = (data, startDate) =>
-  // no filter for main race
-  // take all matches intentionally
-  // subject to future change
-  data.matches
-    .filter((match) => isNotJoinbug(match))
+export const transformMatchesDataToOurLiking = (data, startDate, player) => {
+  const playerIsPlayingMainRaceInThisMatch = (match, player) => {
+    return (
+      (match.teams[0].players[0].battleTag === `${player.name}#${player.id}` &&
+        player.race === match.teams[0].players[0].race) ||
+      (match.teams[1].players[0].battleTag === `${player.name}#${player.id}` &&
+        player.race === match.teams[1].players[0].race)
+    );
+  };
+
+  return data.matches
+    .filter(
+      (match) =>
+        isNotJoinbug(match) && playerIsPlayingMainRaceInThisMatch(match, player)
+    )
     .map((match) => ({
       week: getWeek(new Date(match.startTime), startDate),
       day: new Date(match.startTime).getDay()
     }));
+};
 
 export const addMatchesToPlayer = (matches, player) => {
   return { ...player, matches };

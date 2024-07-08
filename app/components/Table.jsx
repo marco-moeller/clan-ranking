@@ -5,7 +5,6 @@ import { getWeek } from "../../utility/matchesHelper";
 import PlayerCard from "./PlayerCard";
 import TableHead from "./TableHead";
 import {
-  fetchCurrentSeasonNumber,
   fetchPlayerData,
   fetchPlayerMatches,
   fetchPlayerMmrHistory
@@ -15,7 +14,6 @@ import {
   transformMmrDataToOurLiking,
   transformPlayerDataToOurLiking
 } from "@/api/dataTransformation";
-import { nanoid } from "nanoid";
 import Navbar from "./Navbar";
 import Loading from "./Loading";
 import { ref, onValue } from "firebase/database";
@@ -25,57 +23,20 @@ import {
   isInMobileView,
   isInTabletView
 } from "@/utility/views";
+import useCurrentSeason from "../hooks/useCurrentSeason";
 
 const Table = () => {
-  const [season, setSeason] = useState({
-    season: 0,
-    startDate: new Date("2024-06-24"),
-    endDate: ""
-  });
-  const [loadingSeason, setLoadingSeason] = useState(true);
-  const [loadingPlayers, setLoadingPlayers] = useState(true);
-  const [selectedWeek, setSelectedWeek] = useState(
-    getWeek(new Date(), season.startDate)
-  );
-  const [players, setPlayers] = useState([]);
   const [showWholeSeason, setShowWholeSeason] = useState(true);
 
-  const currentWeekOfTheSeason = getWeek(new Date(), season.startDate);
-  //all weeks of the season, for button creation
-  const [weeks, setWeeks] = useState(
-    Array.apply(null, Array(currentWeekOfTheSeason))
-  );
+  const { season, loadingSeason, currentWeekOfTheSeason, weeks, selectedWeek } =
+    useCurrentSeason(showWholeSeason, setShowWholeSeason);
+  const [loadingPlayers, setLoadingPlayers] = useState(true);
 
-  const handleWeekClick = (index) => {
-    setSelectedWeek(index);
-    setShowWholeSeason(false);
-  };
-
-  const getWeekButtonStyle = (index) => {
-    return index === selectedWeek && !showWholeSeason ? "current--week" : "";
-  };
+  const [players, setPlayers] = useState([]);
 
   const sortBy = (property) => {
     setPlayers((prevPlayers) => _.sortBy(prevPlayers, [property]).reverse());
   };
-
-  //populate week buttons based on season length
-  useEffect(() => {
-    const renderWeeks = () => {
-      setWeeks((prevWeeks) =>
-        prevWeeks.map((_, index) => (
-          <button
-            className={"" + getWeekButtonStyle(index + 1)}
-            onClick={() => handleWeekClick(index + 1)}
-            key={nanoid()}
-          >
-            {index + 1}
-          </button>
-        ))
-      );
-    };
-    renderWeeks();
-  }, [selectedWeek, showWholeSeason]);
 
   // Main Initialization
   useEffect(() => {
@@ -99,7 +60,8 @@ const Table = () => {
     const initializePlayerMatches = async (player) => {
       const matches = transformMatchesDataToOurLiking(
         await fetchPlayerMatches(player, season.season),
-        season.startDate
+        season.startDate,
+        player
       );
       return { ...player, matches: matches };
     };
@@ -125,20 +87,6 @@ const Table = () => {
     return () => setPlayers([]);
   }, [loadingSeason]);
 
-  //get current season
-  useEffect(() => {
-    setLoadingSeason(true);
-    const seasonInit = async () => {
-      const seasonNumber = await fetchCurrentSeasonNumber();
-      setSeason((prevSeason) => ({
-        ...prevSeason,
-        season: seasonNumber
-      }));
-      setLoadingSeason(false);
-    };
-    seasonInit();
-  }, []);
-
   //dynamic layout depending on number of weeks, change on resize
   useEffect(() => {
     const resize = () => {
@@ -163,7 +111,7 @@ const Table = () => {
 
     window.addEventListener("resize", resize);
     return () => window.removeEventListener("resize", resize);
-  }, []);
+  }, [currentWeekOfTheSeason]);
 
   //dynamic layout depending on number of weeks, for init
   useEffect(() => {
@@ -182,7 +130,7 @@ const Table = () => {
     if (window.innerWidth < 1020) {
       document.body.style.setProperty("--columnsSeason", 4);
     }
-  }, []);
+  }, [currentWeekOfTheSeason]);
 
   return (
     <>

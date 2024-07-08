@@ -60,3 +60,31 @@ export const fetchCurrentSeasonNumber = async () => {
     return {};
   }
 };
+
+export const fetchNumberOfMatchesInCurrentSeason = async (season) => {
+  try {
+    const { data } = await client.get(
+      `/matches?offset=100000000&pageSize=100&gameMode=1&season=${season}`
+    );
+    if (data) {
+      return data.count;
+    }
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+};
+
+export const fetchFirstMatchOfTheSeason = async (season, offset) => {
+  try {
+    const { data } = await client.get(
+      `/matches?offset=${offset}&pageSize=100&gameMode=1&season=${season}`
+    );
+    if (data) {
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+    return {};
+  }
+};
