@@ -148,6 +148,7 @@ main {
   display: grid;
   padding: 3em;
   width: 100%;
+  text-align: center;
 }
 
 .week--table {
