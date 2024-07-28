@@ -144,29 +144,31 @@ const Table = () => {
           showWholeSeason={showWholeSeason}
         />
       )}
-      {loadingPlayers && !loadingSeason && <Loading />}
-      {!loadingPlayers && (
-        <div className={showWholeSeason ? "season--table" : "week--table"}>
-          <TableHead
-            showWholeSeason={showWholeSeason}
-            setPlayers={setPlayers}
-            selectedWeek={selectedWeek}
-            weeks={weeks}
-            sortBy={sortBy}
-          />
-          {players.map((player, index) => (
-            <PlayerCard
-              isLast={index === players.length - 1}
-              player={player}
-              id={index + 1}
-              key={player.name + "#" + player.id + nanoid()}
-              week={currentWeekOfTheSeason}
-              selectedWeek={selectedWeek}
+      <main>
+        {loadingPlayers && !loadingSeason && <Loading />}
+        {!loadingPlayers && (
+          <div className={showWholeSeason ? "season--table" : "week--table"}>
+            <TableHead
               showWholeSeason={showWholeSeason}
+              setPlayers={setPlayers}
+              selectedWeek={selectedWeek}
+              weeks={weeks}
+              sortBy={sortBy}
             />
-          ))}
-        </div>
-      )}
+            {players.map((player, index) => (
+              <PlayerCard
+                isLast={index === players.length - 1}
+                player={player}
+                id={index + 1}
+                key={player.name + "#" + player.id + nanoid()}
+                week={currentWeekOfTheSeason}
+                selectedWeek={selectedWeek}
+                showWholeSeason={showWholeSeason}
+              />
+            ))}
+          </div>
+        )}
+      </main>
     </>
   );
 };
