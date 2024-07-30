@@ -43,6 +43,10 @@ summary,
   font-size: inherit;
 }
 
+body {
+  user-select: none;
+}
+
 menu:not(article menu),
 ol:not(article ol),
 ul:not(article ul) {
@@ -291,6 +295,14 @@ footer {
   opacity: 0;
 }
 
+.loading-text {
+  color: var(--color2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 2rem;
+  margin: auto;
+  min-width: 200px;
+}
 /* -- MEDIA -- */
 @media (width < 1633px) {
   .matches--a--week,
