@@ -14,13 +14,11 @@ import _ from "lodash";
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
-const TableHead = ({
-  showWholeSeason,
-  setPlayers,
-  weeks,
-  selectedWeek,
-  sortBy
-}) => {
+const TableHead = ({ showWholeSeason, setPlayers, weeks, selectedWeek }) => {
+  const sortBy = (property) => {
+    setPlayers((prevPlayers) => _.sortBy(prevPlayers, [property]).reverse());
+  };
+
   const sortByMatchesAWeek = () => {
     setPlayers((prevPlayers) => [
       ...prevPlayers.sort(

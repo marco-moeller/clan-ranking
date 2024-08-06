@@ -24,6 +24,7 @@ import {
 } from "@/utility/views";
 import useCurrentSeason from "../hooks/useCurrentSeason";
 import { nanoid } from "nanoid";
+import { getNumberOfMatchesAWeek } from "@/utility/matchesCounting";
 
 const Table = () => {
   const [showWholeSeason, setShowWholeSeason] = useState(false);
@@ -34,8 +35,14 @@ const Table = () => {
 
   const [players, setPlayers] = useState([]);
 
-  const sortBy = (property) => {
-    setPlayers((prevPlayers) => _.sortBy(prevPlayers, [property]).reverse());
+  const sortByMatchesAWeek = () => {
+    setPlayers((prevPlayers) => [
+      ...prevPlayers.sort(
+        (a, b) =>
+          getNumberOfMatchesAWeek(b.matches, selectedWeek) -
+          getNumberOfMatchesAWeek(a.matches, selectedWeek)
+      )
+    ]);
   };
 
   // Main Initialization
@@ -54,7 +61,7 @@ const Table = () => {
         newPlayerWithMatchesAndMmrHistory
       ]);
       setLoadingPlayers(false);
-      sortBy("matches.length");
+      sortByMatchesAWeek();
     };
 
     const initializePlayerMatches = async (player) => {
@@ -153,7 +160,6 @@ const Table = () => {
               setPlayers={setPlayers}
               selectedWeek={selectedWeek}
               weeks={weeks}
-              sortBy={sortBy}
             />
             {players.map((player, index) => (
               <PlayerCard

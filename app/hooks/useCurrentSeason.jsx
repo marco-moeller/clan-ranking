@@ -19,7 +19,7 @@ export default function useCurrentSeason({
   });
 
   const [currentWeekOfTheSeason, setCurrentWeekOfTheSeason] = useState(0);
-  const [selectedWeek, setSelectedWeek] = useState(null);
+  const [selectedWeek, setSelectedWeek] = useState(0);
 
   //all weeks of the season, for button creation
   const { weeks } = useWeeks({
@@ -60,11 +60,18 @@ export default function useCurrentSeason({
         numberOfMatchesInTheCurrentSeason - 1
       );
       const startDate = new Date(data.matches[0].startTime);
+
       return startDate;
     };
 
     seasonInit();
   }, []);
 
-  return { season, loadingSeason, currentWeekOfTheSeason, weeks, selectedWeek };
+  return {
+    season,
+    loadingSeason,
+    currentWeekOfTheSeason,
+    weeks,
+    selectedWeek
+  };
 }
