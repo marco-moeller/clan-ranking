@@ -26,10 +26,10 @@ import useCurrentSeason from "../hooks/useCurrentSeason";
 import { nanoid } from "nanoid";
 
 const Table = () => {
-  const [showWholeSeason, setShowWholeSeason] = useState(true);
+  const [showWholeSeason, setShowWholeSeason] = useState(false);
 
   const { season, loadingSeason, currentWeekOfTheSeason, weeks, selectedWeek } =
-    useCurrentSeason(showWholeSeason, setShowWholeSeason);
+    useCurrentSeason({ showWholeSeason, setShowWholeSeason });
   const [loadingPlayers, setLoadingPlayers] = useState(true);
 
   const [players, setPlayers] = useState([]);

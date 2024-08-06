@@ -7,7 +7,10 @@ import { getWeek } from "@/utility/matchesHelper";
 import { useEffect, useState } from "react";
 import useWeeks from "./useWeeks";
 
-export default function useCurrentSeason(showWholeSeason, setShowWholeSeason) {
+export default function useCurrentSeason({
+  showWholeSeason,
+  setShowWholeSeason
+}) {
   const [loadingSeason, setLoadingSeason] = useState(true);
   const [season, setSeason] = useState({
     season: 0,
@@ -16,9 +19,7 @@ export default function useCurrentSeason(showWholeSeason, setShowWholeSeason) {
   });
 
   const [currentWeekOfTheSeason, setCurrentWeekOfTheSeason] = useState(0);
-  const [selectedWeek, setSelectedWeek] = useState(
-    getWeek(new Date(), season.startDate)
-  );
+  const [selectedWeek, setSelectedWeek] = useState(null);
 
   //all weeks of the season, for button creation
   const { weeks } = useWeeks({
@@ -39,7 +40,11 @@ export default function useCurrentSeason(showWholeSeason, setShowWholeSeason) {
         season: seasonNumber,
         endDate: ""
       });
-      setCurrentWeekOfTheSeason(getWeek(new Date(), startDate));
+
+      const currentWeekOfTheSeason = getWeek(new Date(), startDate);
+
+      setCurrentWeekOfTheSeason(currentWeekOfTheSeason);
+      setSelectedWeek(currentWeekOfTheSeason);
       setLoadingSeason(false);
     };
 
