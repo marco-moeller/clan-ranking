@@ -112,7 +112,7 @@ const Table = () => {
           );
         }
         if (isInMobileView()) {
-          document.body.style.setProperty("--columnsSeason", 4);
+          document.body.style.setProperty("--columnsSeason", 3);
         }
       }
     };
@@ -136,7 +136,7 @@ const Table = () => {
       );
     }
     if (window.innerWidth < 1020) {
-      document.body.style.setProperty("--columnsSeason", 4);
+      document.body.style.setProperty("--columnsSeason", 3);
     }
   }, [currentWeekOfTheSeason]);
 

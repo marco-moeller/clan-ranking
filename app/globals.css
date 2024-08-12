@@ -344,7 +344,7 @@ footer {
     display: none;
   }
   .week--table {
-    grid-template-columns: repeat(5, auto);
+    grid-template-columns: repeat(4, auto);
   }
   .season--table {
     grid-template-columns: repeat(-var(--columnsSeason), 1fr);
@@ -361,7 +361,7 @@ footer {
   }
 
   .rank {
-    text-align: center;
+    display: none;
   }
   .mmr {
     border-right: none;
