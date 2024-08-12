@@ -57,8 +57,8 @@ export const transformMatchesDataToOurLiking = (data, startDate, player) => {
         isNotJoinbug(match) && playerIsPlayingMainRaceInThisMatch(match, player)
     )
     .map((match) => ({
-      week: getWeek(new Date(match.startTime), startDate),
-      day: new Date(match.startTime).getDay()
+      week: getWeek(new Date(match.startTime.split("T")[0]), startDate),
+      day: new Date(match.startTime.split("T")[0]).getDay()
     }));
 };
 
@@ -72,7 +72,8 @@ export const transformMmrDataToOurLiking = (data, startDate) => {
   }
   let newMmrHistory = data.mmrRpAtDates.map((date) => ({
     mmr: date.mmr,
-    week: getWeek(new Date(date.date), startDate)
+    //take timezone off the date to make it server time basically, meaning we get a cutoff for mmr at 2am
+    week: getWeek(new Date(date.date.split("T")[0]), startDate)
   }));
   // save first element
   const first = { mmr: newMmrHistory[0].mmr, week: 0 };
