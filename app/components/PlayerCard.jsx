@@ -30,9 +30,21 @@ const PlayerCard = ({ player, id, week, selectedWeek, showWholeSeason }) => {
     <>
       <h3 className="rank table--element">{id}</h3>
       <div>
-        <h3 className="name table--element" onClick={toggleMobileWeek}>
+        <a
+          href={
+            isInMobileView()
+              ? "javascript:void(0)"
+              : "https://w3champions.com/player/" +
+                player.name +
+                "%23" +
+                player.id
+          }
+          className="name table--element"
+          onClick={toggleMobileWeek}
+          target={isInMobileView() ? "" : "_blank"}
+        >
           {player.name}{" "}
-        </h3>
+        </a>
       </div>
       <h3 className="table--element mmr">{player.mmr}</h3>
       <h3 className={"race table--element " + calculateRace(player.race)}>

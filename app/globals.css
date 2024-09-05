@@ -208,6 +208,12 @@ h3.name {
   color: var(--color2);
 }
 
+a.name {
+  color: var(--color2);
+  text-decoration: none;
+  font-size: 2rem;
+}
+
 .th {
   border-bottom: 2px solid whitesmoke;
 }
