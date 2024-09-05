@@ -136,7 +136,7 @@ const TableHead = ({ showWholeSeason, setPlayers, weeks, selectedWeek }) => {
           showWholeSeason ? sortBy("matches.length") : sortByMatchesAWeek();
         }}
       >
-        #
+        Games
       </h2>
     </>
   );
