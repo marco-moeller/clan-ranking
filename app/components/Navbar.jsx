@@ -5,13 +5,18 @@ const Navbar = ({ setShowWholeSeason, weeks, season, showWholeSeason }) => {
     <nav className="buttons--container">
       <button
         className={
-          showWholeSeason
-            ? "week showall--btn current--week"
-            : "week showall--btn"
+          showWholeSeason ? "showall--btn current--week" : " showall--btn"
         }
         onClick={() => setShowWholeSeason(true)}
       >
-        Season {season}
+        <p
+          className={
+            showWholeSeason ? "current--week nav-btn-tag" : " nav-btn-tag"
+          }
+        >
+          Season
+        </p>
+        {season}
       </button>
       {weeks}
     </nav>

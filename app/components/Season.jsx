@@ -1,5 +1,4 @@
 import { getNumberOfMatchesAWeek } from "@/utility/matchesCounting";
-import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 
 const Season = ({ player, week }) => {
@@ -9,9 +8,12 @@ const Season = ({ player, week }) => {
     for (let index = 1; index <= week; index++) {
       setMatchesAWeek((prevMatches) => [
         ...prevMatches,
-        <h3 className="matches--a--week" key={nanoid()}>
-          {getNumberOfMatchesAWeek(player.matches, index)}{" "}
-        </h3>,
+        <div className="week-of-the-season" key={index}>
+          <p className="day-tag">Week {index}</p>
+          <h3 className="matches--a--week">
+            {getNumberOfMatchesAWeek(player.matches, index)}{" "}
+          </h3>
+        </div>
       ]);
     }
   };
@@ -19,7 +21,7 @@ const Season = ({ player, week }) => {
     renderMatchesPerWeek();
   }, [player]);
 
-  return matchesAWeek;
+  return <section className="season"> {matchesAWeek}</section>;
 };
 
 export default Season;

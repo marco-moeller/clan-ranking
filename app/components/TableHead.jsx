@@ -2,17 +2,14 @@ import {
   getNumberOfMatchesADay,
   getNumberOfMatchesAWeek
 } from "@/utility/matchesCounting";
-import { getDayIndexFromDayString } from "@/utility/matchesHelper";
 import {
   getMmrDifference,
   getPrevWeekMmr,
   getWeekEndMmr
 } from "@/utility/mmrCalculation";
-import { nanoid } from "nanoid";
 import { useEffect } from "react";
 import _ from "lodash";
-
-const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+import { RiExpandUpDownLine } from "react-icons/ri";
 
 const TableHead = ({ showWholeSeason, setPlayers, weeks, selectedWeek }) => {
   const sortBy = (property) => {
@@ -84,61 +81,33 @@ const TableHead = ({ showWholeSeason, setPlayers, weeks, selectedWeek }) => {
   }, [selectedWeek, showWholeSeason]);
 
   return (
-    <>
-      <div className="th table--element rank"></div>
-      <h2 className="th table--element name" onClick={sortByName}>
-        Name
-      </h2>
-      <h2
-        className="th sort-btn table--element mmr"
-        onClick={() => sortBy("mmr")}
-      >
+    <section className="table-head">
+      <h2 className="sort-btn  " onClick={() => sortBy("mmr")}>
         MMR
+        <RiExpandUpDownLine />
       </h2>
-      <h2 className="th table--element race" onClick={() => sortBy("race")}>
+      <h2 className="sort-btn " onClick={() => sortBy("race")}>
         Race
+        <RiExpandUpDownLine />
       </h2>
+
       {!showWholeSeason && (
-        <h2 className="th table--element start--mmr" onClick={sortByStartMmr}>
-          Start MMR
-        </h2>
-      )}
-      {showWholeSeason &&
-        weeks.map((_, index) => (
-          <h2 className="th matches--a--week" key={nanoid()}>
-            {index + 1}
-          </h2>
-        ))}
-      {!showWholeSeason &&
-        WEEKDAYS.map((day) => (
-          <h2
-            className="th weekday"
-            key={day}
-            onClick={() => sortByMatchesADay(getDayIndexFromDayString(day))}
-          >
-            {day}
-          </h2>
-        ))}
-      {!showWholeSeason && (
-        <h2 className="th end--mmr" onClick={sortByEndMmr}>
-          End MMR
-        </h2>
-      )}
-      {!showWholeSeason && (
-        <h2 className="th" onClick={sortByMmrDifference}>
-          MMR +/-
+        <h2 className="sort-btn " onClick={sortByMmrDifference}>
+          MMR Gain
+          <RiExpandUpDownLine />
         </h2>
       )}
 
       <h2
-        className="th sort-btn matches"
+        className="sort-btn "
         onClick={() => {
           showWholeSeason ? sortBy("matches.length") : sortByMatchesAWeek();
         }}
       >
         Games
+        <RiExpandUpDownLine />
       </h2>
-    </>
+    </section>
   );
 };
 

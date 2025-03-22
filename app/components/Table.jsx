@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import PlayerCard from "./PlayerCard";
-import TableHead from "./TableHead";
 import {
   fetchPlayerData,
   fetchPlayerMatches,
@@ -17,20 +16,16 @@ import Navbar from "./Navbar";
 import Loading from "./Loading";
 import { ref, onValue } from "firebase/database";
 import db from "@/database/config";
-import {
-  isInDesktopView,
-  isInMobileView,
-  isInTabletView
-} from "@/utility/views";
 import useCurrentSeason from "../hooks/useCurrentSeason";
-import { nanoid } from "nanoid";
 import { getNumberOfMatchesAWeek } from "@/utility/matchesCounting";
+import TableHead from "./TableHead";
 
 const Table = () => {
   const [showWholeSeason, setShowWholeSeason] = useState(false);
 
   const { season, loadingSeason, currentWeekOfTheSeason, weeks, selectedWeek } =
     useCurrentSeason({ showWholeSeason, setShowWholeSeason });
+
   const [loadingPlayers, setLoadingPlayers] = useState(true);
 
   const [players, setPlayers] = useState([]);
@@ -42,6 +37,12 @@ const Table = () => {
           getNumberOfMatchesAWeek(b.matches, selectedWeek) -
           getNumberOfMatchesAWeek(a.matches, selectedWeek)
       )
+    ]);
+  };
+
+  const sortByMatchesASeason = () => {
+    setPlayers((prevPlayers) => [
+      ...prevPlayers.sort((a, b) => b.matches.length - a.matches.length)
     ]);
   };
 
@@ -95,54 +96,63 @@ const Table = () => {
     return () => setPlayers([]);
   }, [loadingSeason]);
 
-  //dynamic layout depending on number of weeks, change on resize
-  useEffect(() => {
-    const resize = () => {
-      {
-        if (isInTabletView()) {
-          document.body.style.setProperty(
-            "--columnsSeason",
-            4 + currentWeekOfTheSeason
-          );
-        }
-        if (isInDesktopView()) {
-          document.body.style.setProperty(
-            "--columnsSeason",
-            5 + currentWeekOfTheSeason
-          );
-        }
-        if (isInMobileView()) {
-          document.body.style.setProperty("--columnsSeason", 3);
-        }
-      }
-    };
+  // //dynamic layout depending on number of weeks, change on resize
+  // useEffect(() => {
+  //   const resize = () => {
+  //     {
+  //       if (isInTabletView()) {
+  //         document.body.style.setProperty(
+  //           "--columnsSeason",
+  //           4 + currentWeekOfTheSeason
+  //         );
+  //       }
+  //       if (isInDesktopView()) {
+  //         document.body.style.setProperty(
+  //           "--columnsSeason",
+  //           5 + currentWeekOfTheSeason
+  //         );
+  //       }
+  //       if (isInMobileView()) {
+  //         document.body.style.setProperty("--columnsSeason", 3);
+  //       }
+  //     }
+  //   };
 
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
-  }, [currentWeekOfTheSeason]);
+  //   window.addEventListener("resize", resize);
+  //   return () => window.removeEventListener("resize", resize);
+  // }, [currentWeekOfTheSeason]);
 
-  //dynamic layout depending on number of weeks, for init
+  // //dynamic layout depending on number of weeks, for init
+  // useEffect(() => {
+  //   if (window.innerWidth < 1320 && window.innerWidth >= 1020) {
+  //     document.body.style.setProperty(
+  //       "--columnsSeason",
+  //       4 + currentWeekOfTheSeason
+  //     );
+  //   }
+  //   if (window.innerWidth >= 1320) {
+  //     document.body.style.setProperty(
+  //       "--columnsSeason",
+  //       5 + currentWeekOfTheSeason
+  //     );
+  //   }
+  //   if (window.innerWidth < 1020) {
+  //     document.body.style.setProperty("--columnsSeason", 3);
+  //   }
+  // }, [currentWeekOfTheSeason]);
+
   useEffect(() => {
-    if (window.innerWidth < 1320 && window.innerWidth >= 1020) {
-      document.body.style.setProperty(
-        "--columnsSeason",
-        4 + currentWeekOfTheSeason
-      );
-    }
-    if (window.innerWidth >= 1320) {
-      document.body.style.setProperty(
-        "--columnsSeason",
-        5 + currentWeekOfTheSeason
-      );
-    }
-    if (window.innerWidth < 1020) {
-      document.body.style.setProperty("--columnsSeason", 3);
-    }
-  }, [currentWeekOfTheSeason]);
+    sortByMatchesAWeek();
+  }, [selectedWeek, showWholeSeason]);
+
+  useEffect(() => {
+    if (!showWholeSeason) return;
+
+    sortByMatchesASeason();
+  }, [showWholeSeason]);
 
   return (
     <>
-      {loadingSeason && <Loading />}
       {!loadingSeason && (
         <Navbar
           setShowWholeSeason={setShowWholeSeason}
@@ -152,21 +162,21 @@ const Table = () => {
         />
       )}
       <main>
-        {loadingPlayers && !loadingSeason && <Loading />}
-        {!loadingPlayers && (
+        <TableHead
+          showWholeSeason={showWholeSeason}
+          setPlayers={setPlayers}
+          selectedWeek={selectedWeek}
+          weeks={weeks}
+        />
+        {(loadingPlayers && <Loading />) || (<Loading /> && loadingSeason)}
+        {!loadingPlayers && !loadingSeason && (
           <div className={showWholeSeason ? "season--table" : "week--table"}>
-            <TableHead
-              showWholeSeason={showWholeSeason}
-              setPlayers={setPlayers}
-              selectedWeek={selectedWeek}
-              weeks={weeks}
-            />
             {players.map((player, index) => (
               <PlayerCard
                 isLast={index === players.length - 1}
                 player={player}
                 id={index + 1}
-                key={player.name + "#" + player.id + nanoid()}
+                key={player.name + "#" + player.id}
                 week={currentWeekOfTheSeason}
                 selectedWeek={selectedWeek}
                 showWholeSeason={showWholeSeason}

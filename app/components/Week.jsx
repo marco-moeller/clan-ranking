@@ -1,21 +1,24 @@
 import { getNumberOfMatchesADay } from "@/utility/matchesCounting";
+import { getDayShortHandleFromIndex } from "@/utility/matchesHelper";
 import { getPrevWeekMmr, getWeekEndMmr } from "@/utility/mmrCalculation";
-import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 
 const Week = ({ player, selectedWeek, week }) => {
   const [matchesADay, setMatchesADay] = useState([]);
-  const [prevWeekMmr, setPrevWeekMmr] = useState(0);
-  const [weekEndMmr, setWeekEndMmr] = useState(0);
+  const prevWeekMmr = getPrevWeekMmr(selectedWeek, player);
+  const weekEndMmr = getWeekEndMmr(selectedWeek, player);
 
   const renderMatchesADay = () => {
     for (let index = 1; index <= 7; index++) {
       setMatchesADay((prevMatches) => [
         ...prevMatches,
-        <h3 className="matches--a--week weekday" key={nanoid()}>
-          {" "}
-          {getNumberOfMatchesADay(player.matches, selectedWeek, index)}{" "}
-        </h3>,
+        <div className="day" key={index}>
+          <p className="day-tag">{getDayShortHandleFromIndex(index)}</p>
+          <h3 key={index}>
+            {" "}
+            {getNumberOfMatchesADay(player.matches, selectedWeek, index)}{" "}
+          </h3>
+        </div>
       ]);
     }
   };
@@ -28,27 +31,32 @@ const Week = ({ player, selectedWeek, week }) => {
 
   useEffect(() => {
     renderMatchesADay();
-    setPrevWeekMmr(getPrevWeekMmr(selectedWeek, player));
-    setWeekEndMmr(getWeekEndMmr(selectedWeek, player));
 
     return () => setMatchesADay([]);
   }, [player, selectedWeek]);
 
   return (
-    <>
-      <h3 className="start--mmr table--element">{prevWeekMmr}</h3>
+    <section className="week">
+      {/* <div className="mmr">
+        <p className="day-tag">START MMR</p>
+
+        <h3 className="start--mmr ">{prevWeekMmr}</h3>
+      </div> */}
       {matchesADay}
-      <h3 className="table--element end--mmr">
-        {selectedWeek === week ? player.mmr : weekEndMmr}
-      </h3>
-      <h3
-        className={
-          getMmrDifferenceStyle(weekEndMmr - prevWeekMmr) + " table--element "
-        }
-      >
-        {weekEndMmr - prevWeekMmr}
-      </h3>
-    </>
+      {/* <div className="mmr">
+        <p className="day-tag">END MMR</p>
+
+        <h3 className=" end--mmr">
+          {selectedWeek === week ? player.mmr : weekEndMmr}
+        </h3>
+      </div> */}
+      <div className="mmr-gain">
+        <p className="day-tag">MMR +/-</p>
+        <h3 className={getMmrDifferenceStyle(weekEndMmr - prevWeekMmr)}>
+          {weekEndMmr - prevWeekMmr}
+        </h3>
+      </div>
+    </section>
   );
 };
 

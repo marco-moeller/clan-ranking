@@ -25,3 +25,17 @@ export const getDayIndexFromDayString = (dayString) => {
 
   return days[dayString];
 };
+
+export const getDayShortHandleFromIndex = (index) => {
+  const days = {
+    1: "Mo",
+    2: "Tu",
+    3: "We",
+    4: "Th",
+    5: "Fr",
+    6: "Sa",
+    7: "Su"
+  };
+
+  return days[index];
+};

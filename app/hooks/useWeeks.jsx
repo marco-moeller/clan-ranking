@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 
 export default function useWeeks({
@@ -28,18 +27,24 @@ export default function useWeeks({
   useEffect(() => {
     const renderWeeks = () => {
       setWeeks((prevWeeks) =>
-        prevWeeks.map((_, index) => (
-          <button
-            className={"" + getWeekButtonStyle(index + 1)}
-            onClick={() => handleWeekClick(index + 1)}
-            key={nanoid()}
-          >
-            {index + 1}
-          </button>
-        ))
+        prevWeeks
+          .map((_, index) => (
+            <button
+              className={"" + getWeekButtonStyle(index + 1)}
+              onClick={() => handleWeekClick(index + 1)}
+              key={index}
+            >
+              <p className={"nav-btn-tag " + getWeekButtonStyle(index + 1)}>
+                week
+              </p>
+              {index + 1}
+            </button>
+          ))
+          .reverse()
       );
     };
     renderWeeks();
   }, [selectedWeek, showWholeSeason, currentWeekOfTheSeason]);
+
   return { weeks };
 }

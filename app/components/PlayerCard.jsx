@@ -2,10 +2,8 @@ import { getNumberOfMatchesAWeek } from "@/utility/matchesCounting";
 import { calculateRace } from "../../utility/calculateRace";
 import Season from "./Season";
 import Week from "./Week";
-import MobileWeek from "./MobileWeek";
 import { isInMobileView } from "@/utility/views";
-import { useEffect, useState } from "react";
-import MobileSeason from "./MobileSeason";
+import { useState } from "react";
 
 const PlayerCard = ({ player, id, week, selectedWeek, showWholeSeason }) => {
   const [showMobile, setShowMobile] = useState(false);
@@ -16,20 +14,21 @@ const PlayerCard = ({ player, id, week, selectedWeek, showWholeSeason }) => {
     }
   };
 
-  const hideMobileWeek = () => {
-    if (!isInMobileView()) setShowMobile(false);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", hideMobileWeek);
-
-    return () => window.removeEventListener("resize", hideMobileWeek);
-  }, []);
-
   return (
-    <>
-      <h3 className="rank table--element">{id}</h3>
-      <div>
+    <section
+      className={`player-card ${id <= 3 ? "top-3" : ""} ${
+        player.matches.length === 0 ? "grey" : ""
+      } `}
+      style={{
+        backgroundImage: `url("${calculateRace(
+          player.race
+        ).toLowerCase()}_mirror_bg.png"),url("${calculateRace(
+          player.race
+        ).toLowerCase()}_bg.png")`
+      }}
+    >
+      {" "}
+      <div className="name">
         <a
           href={
             isInMobileView()
@@ -39,40 +38,50 @@ const PlayerCard = ({ player, id, week, selectedWeek, showWholeSeason }) => {
                 "%23" +
                 player.id
           }
-          className="name table--element"
+          className="name"
           onClick={toggleMobileWeek}
           target={isInMobileView() ? "" : "_blank"}
         >
           {player.name}{" "}
         </a>
       </div>
-      <h3 className="table--element mmr">{player.mmr}</h3>
-      <h3 className={"race table--element " + calculateRace(player.race)}>
-        {calculateRace(player.race)}
-      </h3>
-      {showWholeSeason && <Season player={player} week={week} />}
+      {!showWholeSeason && (
+        <>
+          <div className="player-card-content week--content">
+            <p className="matches ">
+              <span className="games-tag">Games</span>
+              {getNumberOfMatchesAWeek(player.matches, selectedWeek)}
+            </p>
+            <p className="mmr">
+              <span className="mmr-tag">MMR</span>
+              {player.mmr}
+            </p>
+          </div>
+          <div className="player-card-right-side">
+            <Week player={player} week={week} selectedWeek={selectedWeek} />
+          </div>
+        </>
+      )}
       {showWholeSeason && (
-        <h3 className="matches table--element">{player.matches.length}</h3>
+        <>
+          <div className="player-card-content season--content">
+            <p className="matches">
+              <span className="games-tag">Games</span>
+
+              {player.matches.length}
+            </p>
+
+            <p className="mmr">
+              <span className="mmr-tag">MMR</span>
+              {player.mmr}
+            </p>
+          </div>
+          <div className="player-card-right-side">
+            <Season player={player} week={week} />
+          </div>
+        </>
       )}
-      {!showWholeSeason && (
-        <Week player={player} week={week} selectedWeek={selectedWeek} />
-      )}
-      {!showWholeSeason && (
-        <h3 className="matches table--element">
-          {getNumberOfMatchesAWeek(player.matches, selectedWeek)}
-        </h3>
-      )}
-      {isInMobileView() && !showWholeSeason && (
-        <section className={`mobile-week ${showMobile ? "" : "hidden"}`}>
-          <MobileWeek player={player} selectedWeek={selectedWeek} />
-        </section>
-      )}
-      {isInMobileView() && showWholeSeason && (
-        <section className={`mobile-season ${showMobile ? "" : "hidden"}`}>
-          <MobileSeason player={player} week={week} />
-        </section>
-      )}
-    </>
+    </section>
   );
 };
 
