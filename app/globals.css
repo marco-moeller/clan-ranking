@@ -304,7 +304,7 @@ p.matches {
 }
 
 p.mmr {
-  width: 190px;
+  width: 150px;
 }
 
 span.games-tag,
@@ -321,7 +321,7 @@ span.mmr-tag {
 
 div.name {
   overflow: hidden;
-  width: 600px;
+  width: 650px;
 }
 
 .player-card-content {
@@ -329,7 +329,7 @@ div.name {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1em;
+  gap: 0.5em;
   padding: 1em;
 }
 
