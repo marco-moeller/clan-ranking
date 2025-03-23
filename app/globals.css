@@ -137,7 +137,7 @@ nav button {
 }
 
 .nav-btn-tag {
-  writing-mode: horizontal-tb; /* Reset to normal text flow */
+  writing-mode: horizontal-tb;
   letter-spacing: normal;
   position: absolute;
   top: 0.25em;
@@ -296,10 +296,11 @@ p.mmr {
   height: 80px;
   line-height: 80px;
   display: flex;
+  letter-spacing: -0.075em;
 }
 
 p.matches {
-  width: 100px;
+  width: 135px;
 }
 
 p.mmr {
@@ -315,6 +316,7 @@ span.mmr-tag {
   line-height: 1;
   margin-top: 10px;
   margin-right: 5px;
+  letter-spacing: 0.05em;
 }
 
 div.name {
@@ -554,15 +556,7 @@ section.grey a.name {
   }
 
   div.name {
-    width: 220px;
-    padding: 0 0.5em;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.25);
-    text-shadow:
-      -1px -1px 0 black,
-      1px -1px 0 black,
-      -1px 1px 0 black,
-      1px 1px 0 black; /* Creates a sharp black outline */
+    width: 70%;
   }
 
   a.name {
@@ -590,17 +584,19 @@ section.grey a.name {
   p.mmr {
     width: auto;
   }
+  .buttons--container button {
+    padding: 0.5em 0;
+    font-size: 1.75rem;
+  }
 }
 
 @media (width <= 450px) {
   a.name {
     overflow: auto;
   }
-  button {
-    padding: 0.4em 0;
-  }
+
   .player-card-content {
-    flex-direction: column;
+    gap: 0;
   }
 
   .player-card-content p {
@@ -621,18 +617,18 @@ section.grey a.name {
   }
 }
 
-@media (width <= 350px) {
+@media (width <= 400px) {
   a.name {
     font-size: 1.5rem;
   }
   div.name {
-    width: 120px;
+    width: 50%;
   }
   p.matches,
   p.mmr {
     font-size: 1rem;
     height: auto;
-    margin-left: 2em;
+    margin-left: 0.5em;
   }
   p.matches {
     width: 40px;
